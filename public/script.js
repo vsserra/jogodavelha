@@ -97,35 +97,31 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     socket.on('playerConfirmed', ({ playerNumber, playerName, socketId }) => {
-        if (socket.id === socketId) {
-            if (playerNumber === 'player1') {
-                players['X'] = playerName;
-                players['XId'] = socketId;
-                statusPlayer1.textContent = 'Confirmado';
-                statusPlayer1.style.color = 'green';
-                confirmPlayer1Button.disabled = true;
-                player1Input.disabled = true;
-                readyPlayer1Button.disabled = false;
-                player2Input.disabled = true;
-                confirmPlayer2Button.disabled = true;
-            } else {
-                players['O'] = playerName;
-                players['OId'] = socketId;
-                statusPlayer2.textContent = 'Confirmado';
-                statusPlayer2.style.color = 'green';
-                confirmPlayer2Button.disabled = true;
-                player2Input.disabled = true;
-                readyPlayer2Button.disabled = false;
-                player1Input.disabled = true;
-                confirmPlayer1Button.disabled = true;
-            }
+        if (playerNumber === 'player1') {
+            players['X'] = playerName;
+            players['XId'] = socketId;
+            statusPlayer1.textContent = 'Confirmado';
+            statusPlayer1.style.color = 'green';
+            confirmPlayer1Button.disabled = true;
+            player1Input.disabled = true;
+            readyPlayer1Button.disabled = false;
         } else {
+            players['O'] = playerName;
+            players['OId'] = socketId;
+            statusPlayer2.textContent = 'Confirmado';
+            statusPlayer2.style.color = 'green';
+            confirmPlayer2Button.disabled = true;
+            player2Input.disabled = true;
+            readyPlayer2Button.disabled = false;
+        }
+
+        if (socket.id !== socketId) {
             if (playerNumber === 'player1') {
-                player2Input.disabled = true;
-                confirmPlayer2Button.disabled = true;
+                player2Input.disabled = false;
+                confirmPlayer2Button.disabled = false;
             } else {
-                player1Input.disabled = true;
-                confirmPlayer1Button.disabled = true;
+                player1Input.disabled = false;
+                confirmPlayer1Button.disabled = false;
             }
         }
 
