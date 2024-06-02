@@ -16,13 +16,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const countdownElement = document.getElementById('countdown');
     const scorePlayer1 = document.getElementById('score-player1');
     const scorePlayer2 = document.getElementById('score-player2');
-    const scoreTies = document.getElementById('score-ties');
 
     let isXTurn = true;
     let gameActive = true;
     let gameState = Array(9).fill(null);
     let players = {};
-    let scores = { player1: 0, player2: 0, ties: 0 };
+    let scores = { player1: 0, player2: 0 };
     let currentPlayer = '';
     let readyPlayers = 0;
 
@@ -39,7 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     socket.on('moveMade', ({ cellIndex, player }) => {
         gameState[cellIndex] = player;
-        cells[cellIndex].innerHTML = `<div>${player}</div>`;
+        cells[cellIndex].textContent = player;
 
         if (checkWinner()) {
             gameActive = false;
@@ -49,8 +48,6 @@ document.addEventListener('DOMContentLoaded', () => {
         } else if (gameState.every(cell => cell !== null)) {
             gameActive = false;
             messageElement.textContent = 'Empate!';
-            scores.ties++;
-            updateScoreboard();
         } else {
             isXTurn = !isXTurn;
             currentPlayer = isXTurn ? players.XId : players.OId;
@@ -83,7 +80,7 @@ document.addEventListener('DOMContentLoaded', () => {
         isXTurn = true;
         gameActive = true;
         gameState = Array(9).fill(null);
-        cells.forEach(cell => (cell.innerHTML = ''));
+        cells.forEach(cell => (cell.textContent = ''));
         messageElement.textContent = `Vez do jogador ${players['X']}`;
         currentPlayer = players['XId'];
     });
@@ -143,11 +140,11 @@ document.addEventListener('DOMContentLoaded', () => {
         if (playerNumber === 'player1') {
             readyPlayer1Button.disabled = true;
             statusPlayer1.textContent = 'Pronto';
-            statusPlayer1.style.color = '#3498db';
+            statusPlayer1.style.color = 'blue';
         } else {
             readyPlayer2Button.disabled = true;
             statusPlayer2.textContent = 'Pronto';
-            statusPlayer2.style.color = '#3498db';
+            statusPlayer2.style.color = 'blue';
         }
 
         if (readyPlayers === 2) {
@@ -176,7 +173,6 @@ document.addEventListener('DOMContentLoaded', () => {
     socket.on('gameStarted', ({ players }) => {
         scorePlayer1.textContent = `${players['X']}: ${scores.player1} vitórias`;
         scorePlayer2.textContent = `${players['O']}: ${scores.player2} vitórias`;
-        scoreTies.textContent = `Empates: ${scores.ties}`;
         playerForm.style.display = 'none';
         scoreboard.style.display = 'block';
         restartGame();
@@ -185,7 +181,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const updateScoreboard = () => {
         scorePlayer1.textContent = `${players['X']}: ${scores.player1} vitórias`;
         scorePlayer2.textContent = `${players['O']}: ${scores.player2} vitórias`;
-        scoreTies.textContent = `Empates: ${scores.ties}`;
     };
 
     cells.forEach(cell => cell.addEventListener('click', handleCellClick));
