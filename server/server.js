@@ -8,6 +8,7 @@ const io = socketIo(server);
 
 let gameState = Array(9).fill(null);
 let players = {};
+let readyPlayers = { player1: false, player2: false };
 
 io.on('connection', (socket) => {
     console.log('Novo jogador conectado');
@@ -21,6 +22,15 @@ io.on('connection', (socket) => {
             const XPlayer = playerEntries.find(([, details]) => details.playerNumber === 'player1');
             const OPlayer = playerEntries.find(([, details]) => details.playerNumber === 'player2');
             io.emit('gameReady', { XPlayer: XPlayer[1], OPlayer: OPlayer[1] });
+        }
+    });
+
+    socket.on('playerReady', ({ playerNumber }) => {
+        readyPlayers[playerNumber] = true;
+        io.emit('playerReadyConfirmed', { playerNumber });
+
+        if (readyPlayers.player1 && readyPlayers.player2) {
+            io.emit('bothPlayersReady');
         }
     });
 
@@ -43,6 +53,7 @@ io.on('connection', (socket) => {
     socket.on('disconnect', () => {
         console.log('Jogador desconectado');
         delete players[socket.id];
+        readyPlayers = { player1: false, player2: false };
     });
 });
 
