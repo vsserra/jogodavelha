@@ -8,6 +8,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const scoreboard = document.getElementById('scoreboard');
     const player1Input = document.getElementById('player1');
     const player2Input = document.getElementById('player2');
+    const confirmPlayer1Button = document.getElementById('confirm-player1');
+    const confirmPlayer2Button = document.getElementById('confirm-player2');
+    const statusPlayer1 = document.getElementById('status-player1');
+    const statusPlayer2 = document.getElementById('status-player2');
     const scorePlayer1 = document.getElementById('score-player1');
     const scorePlayer2 = document.getElementById('score-player2');
 
@@ -78,27 +82,51 @@ document.addEventListener('DOMContentLoaded', () => {
         currentPlayer = players['XId'];
     });
 
-    const startGame = () => {
-        const player1 = player1Input.value || 'Jogador 1';
-        const player2 = player2Input.value || 'Jogador 2';
+    const confirmPlayer = (playerNumber) => {
+        const playerName = playerNumber === 'player1' ? player1Input.value : player2Input.value;
 
-        if (!player1 || !player2) {
-            alert('Por favor, insira os nomes dos dois jogadores.');
+        if (!playerName) {
+            alert('Por favor, insira um nome.');
             return;
         }
 
-        socket.emit('startGame', { player1, player2 });
+        socket.emit('confirmPlayer', { playerNumber, playerName });
     };
 
-    socket.on('gameStarted', ({ player1, player2, XId, OId }) => {
-        players = {
-            'X': player1,
-            'O': player2,
-            'XId': XId,
-            'OId': OId
-        };
-        scorePlayer1.textContent = `${player1}: ${scores.player1} vitórias`;
-        scorePlayer2.textContent = `${player2}: ${scores.player2} vitórias`;
+    socket.on('playerConfirmed', ({ playerNumber, playerName, socketId }) => {
+        if (playerNumber === 'player1') {
+            players['X'] = playerName;
+            players['XId'] = socketId;
+            statusPlayer1.textContent = 'Confirmado';
+            statusPlayer1.style.color = 'green';
+            confirmPlayer1Button.disabled = true;
+            player1Input.disabled = true;
+        } else {
+            players['O'] = playerName;
+            players['OId'] = socketId;
+            statusPlayer2.textContent = 'Confirmado';
+            statusPlayer2.style.color = 'green';
+            confirmPlayer2Button.disabled = true;
+            player2Input.disabled = true;
+        }
+
+        if (players['X'] && players['O']) {
+            startGameButton.disabled = false;
+        }
+    });
+
+    const startGame = () => {
+        if (!players['X'] || !players['O']) {
+            alert('Os dois jogadores precisam confirmar seus nomes.');
+            return;
+        }
+
+        socket.emit('startGame', { players });
+    };
+
+    socket.on('gameStarted', ({ players }) => {
+        scorePlayer1.textContent = `${players['X']}: ${scores.player1} vitórias`;
+        scorePlayer2.textContent = `${players['O']}: ${scores.player2} vitórias`;
         playerForm.style.display = 'none';
         scoreboard.style.display = 'block';
         restartGame();
@@ -111,5 +139,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     cells.forEach(cell => cell.addEventListener('click', handleCellClick));
     restartButton.addEventListener('click', restartGame);
+    confirmPlayer1Button.addEventListener('click', () => confirmPlayer('player1'));
+    confirmPlayer2Button.addEventListener('click', () => confirmPlayer('player2'));
     startGameButton.addEventListener('click', startGame);
 });
