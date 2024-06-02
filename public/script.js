@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const cell = event.target;
         const cellIndex = parseInt(cell.getAttribute('data-index'));
 
-        if (gameState[cellIndex] !== null || !gameActive || currentPlayer !== players[isXTurn ? 'X' : 'O']) {
+        if (gameState[cellIndex] !== null || !gameActive || currentPlayer !== socket.id) {
             return;
         }
 
@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
             messageElement.textContent = 'Empate!';
         } else {
             isXTurn = !isXTurn;
-            currentPlayer = players[isXTurn ? 'X' : 'O'];
+            currentPlayer = isXTurn ? players.XId : players.OId;
             messageElement.textContent = `Vez do jogador ${players[isXTurn ? 'X' : 'O']}`;
         }
     });
@@ -75,20 +75,34 @@ document.addEventListener('DOMContentLoaded', () => {
         gameState = Array(9).fill(null);
         cells.forEach(cell => (cell.textContent = ''));
         messageElement.textContent = `Vez do jogador ${players['X']}`;
-        currentPlayer = players['X'];
+        currentPlayer = players['XId'];
     });
 
     const startGame = () => {
+        const player1 = player1Input.value || 'Jogador 1';
+        const player2 = player2Input.value || 'Jogador 2';
+
+        if (!player1 || !player2) {
+            alert('Por favor, insira os nomes dos dois jogadores.');
+            return;
+        }
+
+        socket.emit('startGame', { player1, player2 });
+    };
+
+    socket.on('gameStarted', ({ player1, player2, XId, OId }) => {
         players = {
-            'X': player1Input.value || 'Jogador 1',
-            'O': player2Input.value || 'Jogador 2'
+            'X': player1,
+            'O': player2,
+            'XId': XId,
+            'OId': OId
         };
-        scorePlayer1.textContent = `${players['X']}: ${scores.player1} vitórias`;
-        scorePlayer2.textContent = `${players['O']}: ${scores.player2} vitórias`;
+        scorePlayer1.textContent = `${player1}: ${scores.player1} vitórias`;
+        scorePlayer2.textContent = `${player2}: ${scores.player2} vitórias`;
         playerForm.style.display = 'none';
         scoreboard.style.display = 'block';
         restartGame();
-    };
+    });
 
     const updateScoreboard = () => {
         scorePlayer1.textContent = `${players['X']}: ${scores.player1} vitórias`;
