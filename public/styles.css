@@ -12,6 +12,25 @@ body {
     text-align: center;
 }
 
+#player-form {
+    margin-bottom: 20px;
+}
+
+#player-form input {
+    padding: 10px;
+    margin: 5px;
+    font-size: 16px;
+}
+
+#player-form button {
+    padding: 10px 20px;
+    font-size: 16px;
+}
+
+#scoreboard {
+    margin-bottom: 20px;
+}
+
 #board {
     display: grid;
     grid-template-columns: repeat(3, 100px);
