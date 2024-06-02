@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     socket.on('moveMade', ({ cellIndex, player }) => {
         gameState[cellIndex] = player;
-        cells[cellIndex].textContent = player;
+        cells[cellIndex].innerHTML = `<div>${player}</div>`;
 
         if (checkWinner()) {
             gameActive = false;
@@ -83,7 +83,7 @@ document.addEventListener('DOMContentLoaded', () => {
         isXTurn = true;
         gameActive = true;
         gameState = Array(9).fill(null);
-        cells.forEach(cell => (cell.textContent = ''));
+        cells.forEach(cell => (cell.innerHTML = ''));
         messageElement.textContent = `Vez do jogador ${players['X']}`;
         currentPlayer = players['XId'];
     });
@@ -104,7 +104,7 @@ document.addEventListener('DOMContentLoaded', () => {
             players['X'] = playerName;
             players['XId'] = socketId;
             statusPlayer1.textContent = 'Confirmado';
-            statusPlayer1.style.color = 'green';
+            statusPlayer1.style.color = 'lightgreen';
             confirmPlayer1Button.disabled = true;
             player1Input.disabled = true;
             readyPlayer1Button.disabled = false;
@@ -112,7 +112,7 @@ document.addEventListener('DOMContentLoaded', () => {
             players['O'] = playerName;
             players['OId'] = socketId;
             statusPlayer2.textContent = 'Confirmado';
-            statusPlayer2.style.color = 'green';
+            statusPlayer2.style.color = 'lightgreen';
             confirmPlayer2Button.disabled = true;
             player2Input.disabled = true;
             readyPlayer2Button.disabled = false;
