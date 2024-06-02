@@ -36,7 +36,6 @@ h1 {
     align-items: center;
     justify-content: space-between;
     margin-bottom: 10px;
-    width: 100%;
 }
 
 .player-input input {
@@ -55,7 +54,7 @@ h1 {
 }
 
 .player-input button {
-    padding: 10px;
+    padding: 10px 15px;
     border: none;
     border-radius: 5px;
     background: #3498db;
@@ -70,27 +69,21 @@ h1 {
     background: #2980b9;
 }
 
-.ready-buttons {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 10px;
-}
-
 .ready-btn {
-    flex: 1;
-    margin: 0 5px;
-    padding: 10px;
+    padding: 10px 20px;
     border: none;
     border-radius: 5px;
-    background: #27ae60;
+    background: #8e44ad;
     color: #fff;
     cursor: pointer;
     font-size: 1em;
     transition: background 0.3s;
+    margin: 10px 5px 0;
+    white-space: nowrap;
 }
 
 .ready-btn:hover {
-    background: #1e8449;
+    background: #71368a;
 }
 
 .countdown {
@@ -173,4 +166,19 @@ h1 {
     font-size: 1.2em;
     margin-top: 20px;
     color: #ecf0f1;
+}
+
+@media (max-width: 600px) {
+    h1 {
+        font-size: 1.5em;
+    }
+    .cell {
+        font-size: 1.5em;
+    }
+    .player-input input {
+        font-size: 0.9em;
+    }
+    .player-input button, .ready-btn, .restart-btn {
+        font-size: 0.9em;
+    }
 }
