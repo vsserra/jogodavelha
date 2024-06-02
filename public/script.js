@@ -3,7 +3,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const cells = document.querySelectorAll('.cell');
     const messageElement = document.getElementById('message');
     const restartButton = document.getElementById('restart');
-    const startGameButton = document.getElementById('start-game');
+    const readyPlayer1Button = document.getElementById('ready-player1');
+    const readyPlayer2Button = document.getElementById('ready-player2');
     const playerForm = document.getElementById('player-form');
     const scoreboard = document.getElementById('scoreboard');
     const player1Input = document.getElementById('player1');
@@ -12,6 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const confirmPlayer2Button = document.getElementById('confirm-player2');
     const statusPlayer1 = document.getElementById('status-player1');
     const statusPlayer2 = document.getElementById('status-player2');
+    const countdownElement = document.getElementById('countdown');
     const scorePlayer1 = document.getElementById('score-player1');
     const scorePlayer2 = document.getElementById('score-player2');
 
@@ -21,6 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let players = {};
     let scores = { player1: 0, player2: 0 };
     let currentPlayer = '';
+    let readyPlayers = 0;
 
     const handleCellClick = (event) => {
         const cell = event.target;
@@ -101,6 +104,7 @@ document.addEventListener('DOMContentLoaded', () => {
             statusPlayer1.style.color = 'green';
             confirmPlayer1Button.disabled = true;
             player1Input.disabled = true;
+            readyPlayer1Button.disabled = false;
         } else {
             players['O'] = playerName;
             players['OId'] = socketId;
@@ -108,19 +112,51 @@ document.addEventListener('DOMContentLoaded', () => {
             statusPlayer2.style.color = 'green';
             confirmPlayer2Button.disabled = true;
             player2Input.disabled = true;
+            readyPlayer2Button.disabled = false;
         }
 
         if (players['X'] && players['O']) {
-            startGameButton.disabled = false;
+            player1Input.disabled = true;
+            player2Input.disabled = true;
         }
     });
 
-    const startGame = () => {
-        if (!players['X'] || !players['O']) {
-            alert('Os dois jogadores precisam confirmar seus nomes.');
-            return;
+    const playerReady = (playerNumber) => {
+        socket.emit('playerReady', { playerNumber });
+    };
+
+    socket.on('playerReadyConfirmed', ({ playerNumber }) => {
+        readyPlayers++;
+        if (playerNumber === 'player1') {
+            readyPlayer1Button.disabled = true;
+            statusPlayer1.textContent = 'Pronto';
+            statusPlayer1.style.color = 'blue';
+        } else {
+            readyPlayer2Button.disabled = true;
+            statusPlayer2.textContent = 'Pronto';
+            statusPlayer2.style.color = 'blue';
         }
 
+        if (readyPlayers === 2) {
+            startCountdown();
+        }
+    });
+
+    const startCountdown = () => {
+        let countdown = 3;
+        countdownElement.style.display = 'block';
+        const interval = setInterval(() => {
+            countdownElement.textContent = countdown;
+            countdown--;
+            if (countdown < 0) {
+                clearInterval(interval);
+                countdownElement.style.display = 'none';
+                startGame();
+            }
+        }, 1000);
+    };
+
+    const startGame = () => {
         socket.emit('startGame', { players });
     };
 
@@ -141,5 +177,6 @@ document.addEventListener('DOMContentLoaded', () => {
     restartButton.addEventListener('click', restartGame);
     confirmPlayer1Button.addEventListener('click', () => confirmPlayer('player1'));
     confirmPlayer2Button.addEventListener('click', () => confirmPlayer('player2'));
-    startGameButton.addEventListener('click', startGame);
+    readyPlayer1Button.addEventListener('click', () => playerReady('player1'));
+    readyPlayer2Button.addEventListener('click', () => playerReady('player2'));
 });
