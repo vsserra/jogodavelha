@@ -7,9 +7,24 @@ const server = http.createServer(app);
 const io = socketIo(server);
 
 let gameState = Array(9).fill(null);
+let players = {};
+let playerSockets = [];
 
 io.on('connection', (socket) => {
     console.log('Novo jogador conectado');
+
+    socket.on('startGame', ({ player1, player2 }) => {
+        if (playerSockets.length < 2) {
+            players[socket.id] = playerSockets.length === 0 ? 'X' : 'O';
+            playerSockets.push(socket.id);
+        }
+
+        if (playerSockets.length === 2) {
+            const XId = playerSockets[0];
+            const OId = playerSockets[1];
+            io.emit('gameStarted', { player1, player2, XId, OId });
+        }
+    });
 
     socket.on('makeMove', ({ cellIndex, player }) => {
         if (gameState[cellIndex] === null) {
@@ -25,6 +40,8 @@ io.on('connection', (socket) => {
 
     socket.on('disconnect', () => {
         console.log('Jogador desconectado');
+        playerSockets = playerSockets.filter(id => id !== socket.id);
+        delete players[socket.id];
     });
 });
 
