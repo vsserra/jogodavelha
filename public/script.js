@@ -105,6 +105,8 @@ document.addEventListener('DOMContentLoaded', () => {
             confirmPlayer1Button.disabled = true;
             player1Input.disabled = true;
             readyPlayer1Button.disabled = false;
+            player2Input.disabled = true;
+            confirmPlayer2Button.disabled = true;
         } else {
             players['O'] = playerName;
             players['OId'] = socketId;
@@ -113,6 +115,8 @@ document.addEventListener('DOMContentLoaded', () => {
             confirmPlayer2Button.disabled = true;
             player2Input.disabled = true;
             readyPlayer2Button.disabled = false;
+            player1Input.disabled = true;
+            confirmPlayer1Button.disabled = true;
         }
 
         if (players['X'] && players['O']) {
