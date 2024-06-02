@@ -3,76 +3,156 @@ body {
     justify-content: center;
     align-items: center;
     height: 100vh;
-    background-color: #f0f0f0;
+    background: linear-gradient(135deg, #72edf2 10%, #5151e5 100%);
     margin: 0;
-    font-family: Arial, sans-serif;
+    font-family: 'Roboto', sans-serif;
 }
 
 #game {
     text-align: center;
+    color: #fff;
 }
 
-#player-form {
-    margin-bottom: 20px;
+h1 {
+    font-size: 2.5em;
+    margin-bottom: 0.5em;
+    text-shadow: 2px 2px #000;
 }
 
-#player-form div {
+.card {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    padding: 20px;
+    margin: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.player-input {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     margin-bottom: 10px;
 }
 
-#player-form input {
+.player-input input {
+    flex: 1;
     padding: 10px;
-    margin: 5px;
-    font-size: 16px;
+    margin-right: 10px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1em;
+    outline: none;
+    transition: box-shadow 0.3s;
 }
 
-#player-form button {
+.player-input input:focus {
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+}
+
+.player-input button {
     padding: 10px 20px;
-    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    background: #4CAF50;
+    color: #fff;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background 0.3s;
 }
 
-#status-player1, #status-player2 {
-    font-weight: bold;
-    margin-left: 10px;
+.player-input button:hover {
+    background: #45a049;
 }
 
-#countdown {
-    font-size: 24px;
-    font-weight: bold;
-    margin-bottom: 20px;
+.ready-btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background: #ff9800;
+    color: #fff;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background 0.3s;
+    margin: 10px 0;
 }
 
-#scoreboard {
+.ready-btn:hover {
+    background: #fb8c00;
+}
+
+.countdown {
+    font-size: 3em;
+    margin: 20px 0;
     display: none;
-    margin-bottom: 20px;
+    animation: countdown 1s infinite;
 }
 
-#board {
+@keyframes countdown {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+}
+
+.board {
     display: grid;
-    grid-template-columns: repeat(3, 100px);
-    grid-gap: 10px;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
     margin: 20px auto;
+    max-width: 300px;
 }
 
 .cell {
     width: 100px;
     height: 100px;
-    background-color: #fff;
-    border: 2px solid #000;
+    background-color: rgba(255, 255, 255, 0.3);
+    border: 2px solid rgba(255, 255, 255, 0.6);
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 24px;
+    font-size: 2em;
     cursor: pointer;
+    transition: background 0.3s, transform 0.3s;
 }
 
-#restart {
-    margin-top: 20px;
+.cell:hover {
+    background-color: rgba(255, 255, 255, 0.5);
+    transform: scale(1.1);
+}
+
+.restart-btn {
     padding: 10px 20px;
-    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    background: #f44336;
+    color: #fff;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background 0.3s;
+    margin-top: 20px;
+}
+
+.restart-btn:hover {
+    background: #e53935;
 }
 
 #message {
+    font-size: 1.2em;
     margin-top: 20px;
-    font-size: 18px;
+}
+
+@media (max-width: 600px) {
+    h1 {
+        font-size: 2em;
+    }
+    .cell {
+        width: 80px;
+        height: 80px;
+        font-size: 1.5em;
+    }
+    .player-input input {
+        font-size: 0.9em;
+    }
+    .player-input button, .ready-btn, .restart-btn {
+        font-size: 0.9em;
+    }
 }
