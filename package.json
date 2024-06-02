@@ -1,0 +1,14 @@
+{
+    "name": "tictactoe",
+    "version": "1.0.0",
+    "description": "Jogo da Velha em Tempo Real",
+    "main": "server.js",
+    "scripts": {
+      "start": "node server.js"
+    },
+    "dependencies": {
+      "express": "^4.17.1",
+      "socket.io": "^4.0.0"
+    }
+  }
+  
