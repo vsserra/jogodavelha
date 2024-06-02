@@ -8,22 +8,24 @@ const io = socketIo(server);
 
 let gameState = Array(9).fill(null);
 let players = {};
-let playerSockets = [];
 
 io.on('connection', (socket) => {
     console.log('Novo jogador conectado');
 
-    socket.on('startGame', ({ player1, player2 }) => {
-        if (playerSockets.length < 2) {
-            players[socket.id] = playerSockets.length === 0 ? 'X' : 'O';
-            playerSockets.push(socket.id);
-        }
+    socket.on('confirmPlayer', ({ playerNumber, playerName }) => {
+        players[socket.id] = { playerNumber, playerName };
+        io.emit('playerConfirmed', { playerNumber, playerName, socketId: socket.id });
 
-        if (playerSockets.length === 2) {
-            const XId = playerSockets[0];
-            const OId = playerSockets[1];
-            io.emit('gameStarted', { player1, player2, XId, OId });
+        if (Object.keys(players).length === 2) {
+            const playerEntries = Object.entries(players);
+            const XPlayer = playerEntries.find(([, details]) => details.playerNumber === 'player1');
+            const OPlayer = playerEntries.find(([, details]) => details.playerNumber === 'player2');
+            io.emit('gameReady', { XPlayer: XPlayer[1], OPlayer: OPlayer[1] });
         }
+    });
+
+    socket.on('startGame', ({ players }) => {
+        io.emit('gameStarted', { players });
     });
 
     socket.on('makeMove', ({ cellIndex, player }) => {
@@ -40,7 +42,6 @@ io.on('connection', (socket) => {
 
     socket.on('disconnect', () => {
         console.log('Jogador desconectado');
-        playerSockets = playerSockets.filter(id => id !== socket.id);
         delete players[socket.id];
     });
 });
