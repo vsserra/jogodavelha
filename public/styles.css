@@ -3,24 +3,24 @@ body {
     justify-content: center;
     align-items: center;
     height: 100vh;
-    background: linear-gradient(135deg, #72edf2 10%, #5151e5 100%);
+    background: linear-gradient(135deg, #ececec 10%, #a1a1a1 100%);
     margin: 0;
     font-family: 'Roboto', sans-serif;
 }
 
 #game {
     text-align: center;
-    color: #fff;
+    color: #333;
 }
 
 h1 {
     font-size: 2.5em;
     margin-bottom: 0.5em;
-    text-shadow: 2px 2px #000;
+    color: #333;
 }
 
 .card {
-    background: rgba(255, 255, 255, 0.1);
+    background: #fff;
     border-radius: 10px;
     padding: 20px;
     margin: 10px;
@@ -38,7 +38,7 @@ h1 {
     flex: 1;
     padding: 10px;
     margin-right: 10px;
-    border: none;
+    border: 1px solid #ccc;
     border-radius: 5px;
     font-size: 1em;
     outline: none;
@@ -46,7 +46,7 @@ h1 {
 }
 
 .player-input input:focus {
-    box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 .player-input button {
@@ -85,6 +85,7 @@ h1 {
     margin: 20px 0;
     display: none;
     animation: countdown 1s infinite;
+    color: #333;
 }
 
 @keyframes countdown {
@@ -104,8 +105,8 @@ h1 {
 .cell {
     width: 100px;
     height: 100px;
-    background-color: rgba(255, 255, 255, 0.3);
-    border: 2px solid rgba(255, 255, 255, 0.6);
+    background-color: #f9f9f9;
+    border: 2px solid #ccc;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -115,7 +116,7 @@ h1 {
 }
 
 .cell:hover {
-    background-color: rgba(255, 255, 255, 0.5);
+    background-color: #e0e0e0;
     transform: scale(1.1);
 }
 
@@ -138,6 +139,7 @@ h1 {
 #message {
     font-size: 1.2em;
     margin-top: 20px;
+    color: #333;
 }
 
 @media (max-width: 600px) {
